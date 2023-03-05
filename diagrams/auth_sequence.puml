@@ -1,0 +1,17 @@
+@startuml
+actor User as User
+participant Client as Client
+participant Auth_API as Auth
+database Credentials_DB as Creds
+database Secrets_DB as Secrets
+
+User -> Client: Asks to create an acc
+Client -> User: Shows form
+User -> User: Fills form
+User -> Client: Submits form
+Client -> Auth: Sends credentials to create account
+Auth -> Auth: Validates credentials
+Auth -> Creds: Credentials exists?
+Auth -> Client: Responds with the success status
+Client -> User: Show success status and message
+@enduml
