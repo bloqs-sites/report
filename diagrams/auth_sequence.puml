@@ -1,17 +1,44 @@
 @startuml
+
+skinparam maxMessageSize 45
+skinparam lifelineStrategy nosolid
+skinparam style strictuml
+hide footbox
+
+header Bloqs
+footer Page %page% of %lastpage%
+
+title Sign In example
+
+hide unlinked
+
 actor User as User
 participant Client as Client
-participant Auth_API as Auth
-database Credentials_DB as Creds
-database Secrets_DB as Secrets
+box "Auth micro service" #transparent
+participant "Authorization API" as Auth
+database "Credentials DB" as Creds
+database "Secrets DB" as Secrets
+end box
 
-User -> Client: Asks to create an acc
-Client -> User: Shows form
-User -> User: Fills form
-User -> Client: Submits form
-Client -> Auth: Sends credentials to create account
-Auth -> Auth: Validates credentials
-Auth -> Creds: Credentials exists?
-Auth -> Client: Responds with the success status
-Client -> User: Show success status and message
+autonumber
+[-> Auth: Requests to create a new account with the credentials given
+Auth -> Auth: Validates Credentials
+alt valid credentials
+    Auth -> Creds: Verifies that the credentials exist
+    activate Creds
+    return results
+    destroy Creds
+    [<- Auth: Responds with the success status
+else invalid credentials
+    [<- Auth: Responds with the error status
+end
+
+newpage Sign Off example
+
+newpage Log In example
+
+newpage Log Off example
+
+newpage Token validation example
+
 @enduml
